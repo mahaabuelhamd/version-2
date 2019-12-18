@@ -1,0 +1,132 @@
+<html>
+<head>
+<style>
+#four
+{
+width:300px;
+height:200px;
+border:1px white solid;
+}
+.h
+{
+color:red;
+font-family:Blackadder ITC;
+font-style:italic;
+font-size:100px;
+}
+</style>
+</head>
+<body>
+<h1 class="h">Learn The English Letters</h1>
+Number Of Letters:
+<input type=text id="one">
+<button id="two" onclick="dis()" >Generate </button>
+<input type=hidden id="retrieve">
+<div id="autoSave"></div>
+
+<div id="three"></div>
+<div id="four"></div>
+<div id="show"></div>
+<img src="" id="ic">
+<!--<form action = "" method = "POST">
+   <input type = "submit" id="r" value = ""/>
+</form>-->
+<button id="r">Retrieve the stored data</button>
+<script src="jquery-3.4.1.min.js"></script>
+<script>
+alert("Welcome, Let`s Go To Learn ");
+
+//add event load to localstorage
+window.addEventListener("load",function(){
+    let x= {type : 'load' , target : 'show' , time_date : new Date()}
+    localStorage.setItem('load',JSON.stringify(x));
+});
+//add event unload to localstorage
+window.addEventListener("unload",function(){
+      
+    let yy= { type : 'unload' , target : 'close' , time_date : new Date()}
+    localStorage.setItem('unload',JSON.stringify(yy));
+  });
+
+  function dis(){
+
+  let z= { type : 'Gen_click' , target : 'Random_Letter ' , time_date : new Date()}
+  localStorage.setItem('Generate_click',JSON.stringify(z));
+   var y=document.getElementById("one").value;
+    abc(y);
+  }
+ 
+function abc(y) {
+
+  var r=document.getElementById("three");
+  r.innerHTML="";
+  var w=document.getElementById("four");
+  w.innerHTML="";
+   var arr = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+   for ( var i = 0; i < y; i++ ) 
+   {
+      
+	   var btt=document.createElement("button");
+	   var text=document.createTextNode(arr[Math.floor(Math.random()*(25-0+1)+0)]);
+	   btt.appendChild(text);
+	   r.appendChild(btt);
+	  
+	   btt.addEventListener("click",function(e)
+	   {
+       //add event letter to localstorage
+      let a= { type : 'Letter_click' , target : 'show photo' , time_date : new Date()}
+      localStorage.setItem('Letter_click',JSON.stringify(a));
+	    var arr=[{ "type" : e.type , "target" : e.target, "time_date" : new Date()}];
+	    var names=e.target.textContent;
+			var c=document.images[0];
+          c.src= names  + ".jpg";
+			   
+	   });
+   }
+var images=["A.jpg","B.jpg","C.jpg","D.jpg","E.jpg","F.jpg","G.jpg","H.jpg","I.jpg","J.jpg",
+	         "K.jpg","L.jpg","M.jpg","N.jpg","O.jpg","P.jpg","Q.jpg","R.jpg","S.png","T.jpg",
+			 "U.jpg","V.jpg","W.jpg","X.jpg","Y.jpg","Z.jpg"];
+			 
+ 
+
+}
+setInterval(function()
+    {
+      $.ajax({
+     type:"POST",
+     url:"server.php",
+     data:{localStorage: JSON.stringify(localStorage) },
+     success:function(response){
+         console.log(response); 
+       }
+  });
+        localStorage.clear();
+    },5000);
+//////////////////retrieve////////////
+$(document).ready(function(){
+	$("#r").click( function(){
+	  $.ajax({
+   
+	   type:"GET",
+	   url:"server.php",
+	   data:{localStorage:JSON.stringify(localStorage)},
+	   success:function(response)
+			 {
+			   if(response)
+			   {
+				   $("#show").text(response);
+				   $("#show").html(response);
+			   }
+			 }
+ 		 
+      });
+  });
+  });
+   
+
+
+
+
+</script>
+</body>
+</html>
